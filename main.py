@@ -25,64 +25,64 @@ gameOver = startFont.render('Game Over!', True, red)
 
 #--- classes ---
 class Ground(game.sprite.Sprite):
-  def __init__(self):
-    super(Ground, self).__init__()
-    self.image = game.Surface((400,80))
-    self.image.fill(darkGreen)
-    self.rect = self.image.get_rect()
-    self.rect.x = 0
-    self.rect.y = 250
+    def __init__(self):
+        super(Ground, self).__init__()
+        self.image = game.Surface((400,80))
+        self.image.fill(darkGreen)
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 250
   
-  def draw(self):
-    surface.blit(self.image, self.rect)
+    def draw(self):
+        surface.blit(self.image, self.rect)
 
 class Player(game.sprite.Sprite):
-  def __init__(self):
-    super(Player, self).__init__()
-    self.image = game.Surface((50,50))
-    self.image.fill(green)
+    def __init__(self):
+        super(Player, self).__init__()
+        self.image = game.Surface((50,50))
+        self.image.fill(green)
     
-    self.rect = self.image.get_rect()
-    self.rect.x = 0
-    self.rect.y = 150
-    self.onground = True
+        self.rect = self.image.get_rect()
+        self.rect.x = 0
+        self.rect.y = 150
+        self.onground = True
     
   # Draws the player on the screen and updates it
-  def draw(self):
-    self.rect.y = 0
-    if self.onground == True:
-      self.rect.bottom = ground.rect.top
-    surface.blit(self.image, self.rect)
+    def draw(self):
+        self.rect.y = 0
+        if self.onground == True:
+            self.rect.bottom = ground.rect.top
+        surface.blit(self.image, self.rect)
 
   # Function for jumping
-  def gravitySwitch(self):
-    if self.onground == False:
-      self.onground = True
-    elif self.onground == True:
-      self.onground = False
+    def gravitySwitch(self):
+        if self.onground == False:
+            self.onground = True
+        elif self.onground == True:
+            self.onground = False
   
 class redbox(game.sprite.Sprite):
-  def __init__(self):
-    super(redbox, self).__init__()
-    self.image = game.Surface((50,50))
-    self.image.fill(red)
-    self.rect = self.image.get_rect()
-    self.rect.x = 400
-    self.rect.y = 0
-    self.lap = 2
-    self.location = 1
+    def __init__(self):
+        super(redbox, self).__init__()
+        self.image = game.Surface((50,50))
+        self.image.fill(red)
+        self.rect = self.image.get_rect()
+        self.rect.x = 400
+        self.rect.y = 0
+        self.lap = 2
+        self.location = 1
     
-  def draw(self):
-    self.rect.y = 0
-    
-    if self.location == 1:
-      self.rect.bottom = ground.rect.top
-    surface.blit(self.image, self.rect)
-    self.rect.x -= math.log(self.lap,1.2)
-    if self.rect.x <= 0:
-      self.rect.x = 400
-      self.location = rand.randrange(0,2)
-      self.lap += 1
+    def draw(self):
+        self.rect.y = 0
+
+        if self.location == 1:
+            self.rect.bottom = ground.rect.top
+        surface.blit(self.image, self.rect)
+        self.rect.x -= math.log(self.lap,1.2)
+        if self.rect.x <= 0:
+            self.rect.x = 400
+            self.location = rand.randrange(0,2)
+            self.lap += 1
 
 #--- sprites and objects ---
 allSprites = game.sprite.Group()
@@ -100,87 +100,87 @@ def start():
   print("started")
   frame = 1
   while(True):
-    ticktock.tick(30)
-    for event in game.event.get():
-      if event.type == game.MOUSEBUTTONDOWN:
-        if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-          game.quit()
+      ticktock.tick(30)
+      for event in game.event.get():
+          if event.type == game.MOUSEBUTTONDOWN:
+              if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+                  game.quit()
 
     # Detects which keys are held down
     
 
 
-    mouse = game.mouse.get_pos()
+      mouse = game.mouse.get_pos()
     
-    surface.fill(blue)
+      surface.fill(blue)
 
-    if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-      game.draw.rect(surface,lightGray,[0,0,30,20])
-    else:
-      game.draw.rect(surface,darkGray,[0,0,30,20])
+      if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+          game.draw.rect(surface,lightGray,[0,0,30,20])
+      else:
+          game.draw.rect(surface,darkGray,[0,0,30,20])
     
 
-    collide = player.rect.colliderect(redBox.rect)
+      collide = player.rect.colliderect(redBox.rect)
 
-    if collide:
-      endGame()
+      if collide:
+          endGame()
 
-    surface.blit(quitText,(0,0))
-    allSprites.update()
-    player.draw()
-    frame += 1
-    redBox.draw()
-    ground.draw()
-    game.display.update()
+      surface.blit(quitText,(0,0))
+      allSprites.update()
+      player.draw()
+      frame += 1
+      redBox.draw()
+      ground.draw()
+      game.display.update()
     
 def endGame():
-  while True:
-    mouse = game.mouse.get_pos()
-    for event in game.event.get():
-          if event.type == game.KEYDOWN:
-            if event.key == game.K_SPACE:
-              player.gravitySwitch()
+    while True:
+        mouse = game.mouse.get_pos()
+        for event in game.event.get():
+            if event.type == game.KEYDOWN:
+                if event.key == game.K_SPACE:
+                    player.gravitySwitch()
 
-          if event.type == game.MOUSEBUTTONDOWN:
-            if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-              game.quit()
+                if event.type == game.MOUSEBUTTONDOWN:
+                    if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+                        game.quit()
 
-    if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-      game.draw.rect(surface,lightGray,[0,0,30,20])
-    else:
-      game.draw.rect(surface,darkGray,[0,0,30,20])
+        if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+            game.draw.rect(surface,lightGray,[0,0,30,20])
+        else:
+            game.draw.rect(surface,darkGray,[0,0,30,20])
 
-    surface.blit(gameOver, (150,150))
-    surface.blit(quitText,(0,0))
-    game.display.update()
+        surface.blit(gameOver, (150,150))
+        surface.blit(quitText,(0,0))
+        game.display.update()
 
 #--- start loop ---
 
 while True:
-  ticktock.tick(60)
-  for event in game.event.get():
-    if event.type == game.MOUSEBUTTONDOWN:
-      if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
-         start()
-      elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-        game.quit()
+    ticktock.tick(60)
+    for event in game.event.get():
+        if event.type == game.MOUSEBUTTONDOWN:
+          if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
+            start()
+        elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+            game.quit()
+    
+    surface.fill((0,0,255))
+    mouse = game.mouse.get_pos()
+    
   
-  surface.fill((0,0,255))
-  mouse = game.mouse.get_pos()
+    if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
+        game.draw.rect(surface,lightGray,[115,130,155,40])
+        game.draw.rect(surface,darkGray,[0,0,30,20])
+    elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+        game.draw.rect(surface,lightGray,[0,0,30,20])
+        game.draw.rect(surface,darkGray,[115,130,155,40])
+    else:
+        game.draw.rect(surface,darkGray,[115,130,155,40])
+        game.draw.rect(surface,darkGray,[0,0,30,20])
+    
+    surface.blit(startText, (120,135))
+    surface.blit(quitText, (0,0))
+    surface.blit(instructions, (100,200))
   
-
-  if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
-    game.draw.rect(surface,lightGray,[115,130,155,40])
-    game.draw.rect(surface,darkGray,[0,0,30,20])
-  elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-    game.draw.rect(surface,lightGray,[0,0,30,20])
-    game.draw.rect(surface,darkGray,[115,130,155,40])
-  else:
-    game.draw.rect(surface,darkGray,[115,130,155,40])
-    game.draw.rect(surface,darkGray,[0,0,30,20])
-  
-  surface.blit(startText, (120,135))
-  surface.blit(quitText, (0,0))
-  surface.blit(instructions, (100,200))
-
-  game.display.update()
+    game.display.update()
