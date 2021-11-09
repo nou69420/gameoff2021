@@ -1,6 +1,7 @@
 #--- Import modules ---
 import pygame as game
 import random as rand
+import math
 
 #--- Start display ---
 game.init()
@@ -19,6 +20,8 @@ startFont = game.font.SysFont('Corbel', 30)
 startText = startFont.render('Click to start', True, green)
 quitFont = game.font.SysFont('Corbel', 15)
 quitText = quitFont.render('quit', True, darkGreen)
+instructions = quitFont.render('Press space to flip gravity, dont get hit by red!', True, green)
+gameOver = startFont.render('Game Over!', True, red)
 
 #--- classes ---
 class Ground(game.sprite.Sprite):
@@ -67,15 +70,19 @@ class redbox(game.sprite.Sprite):
     self.rect = self.image.get_rect()
     self.rect.x = 400
     self.rect.y = 0
-    self.lap = 1
+    self.lap = 2
+    self.location = 1
     
   def draw(self):
     self.rect.y = 0
-    self.rect.bottom = ground.rect.top
+    
+    if self.location == 1:
+      self.rect.bottom = ground.rect.top
     surface.blit(self.image, self.rect)
-    self.rect.x -= 1 * self.lap
+    self.rect.x -= math.log(self.lap,1.2)
     if self.rect.x <= 0:
       self.rect.x = 400
+      self.location = rand.randrange(0,2)
       self.lap += 1
 
 #--- sprites and objects ---
@@ -89,18 +96,13 @@ allSprites.add(redBox)
 ticktock = game.time.Clock()
 
 
-
 #--- Game Functions ---
 def start():
   print("started")
-  
+  frame = 1
   while(True):
-    ticktock.tick(120)
+    ticktock.tick(30)
     for event in game.event.get():
-      if event.type == game.KEYDOWN:
-        if event.key == game.K_UP:
-          player.gravitySwitch()
-
       if event.type == game.MOUSEBUTTONDOWN:
         if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
           game.quit()
@@ -127,13 +129,31 @@ def start():
     surface.blit(quitText,(0,0))
     allSprites.update()
     player.draw()
-    ground.draw()
+    frame += 1
     redBox.draw()
+    ground.draw()
     game.display.update()
     
 def endGame():
-  print("Game Over")
-  game.quit()
+  while True:
+    mouse = game.mouse.get_pos()
+    for event in game.event.get():
+          if event.type == game.KEYDOWN:
+            if event.key == game.K_SPACE:
+              player.gravitySwitch()
+
+          if event.type == game.MOUSEBUTTONDOWN:
+            if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+              game.quit()
+
+    if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+      game.draw.rect(surface,lightGray,[0,0,30,20])
+    else:
+      game.draw.rect(surface,darkGray,[0,0,30,20])
+
+    surface.blit(gameOver, (150,150))
+    surface.blit(quitText,(0,0))
+    game.display.update()
 
 #--- start loop ---
 
@@ -162,5 +182,6 @@ while True:
   
   surface.blit(startText, (120,135))
   surface.blit(quitText, (0,0))
+  surface.blit(instructions, (100,200))
 
   game.display.update()
