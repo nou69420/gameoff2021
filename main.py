@@ -1,6 +1,6 @@
 #--- Import modules ---
 import pygame as game
-import sys
+import random as rand
 
 #--- Start display ---
 game.init()
@@ -18,42 +18,9 @@ darkGreen = (0,100,0)
 startFont = game.font.SysFont('Corbel', 30)
 startText = startFont.render('Click to start', True, green)
 quitFont = game.font.SysFont('Corbel', 15)
-quitText = quitFont.render('quit', True, red)
+quitText = quitFont.render('quit', True, darkGreen)
 
 #--- classes ---
-class Player(game.sprite.Sprite):
-  def __init__(self):
-    super(Player, self).__init__()
-    self.image = game.Surface((50,50))
-    self.image.fill(green)
-    
-    self.rect = self.image.get_rect()
-    self.rect.x = 0
-    self.rect.y = 150
-    self.isJumping = False
-    self.jumpCount = 10
-    
-  # Draws the player on the screen and updates it
-  def draw(self):
-    self.rect.y = 0
-    self.rect.bottom = ground.rect.top
-    self.isJumping = False
-    surface.blit(self.image, self.rect)
-
-  # Function for jumping
-  def jumpTick(self):
-    #if self.isJumping:
-
-
-  # Moves player to the left by 1 step
-  def moveLeft(self):
-    self.rect.x -= 1
-
-  # Moves player to the right by 1 step
-  def moveRight(self):
-    self.rect.x += 1
-
-
 class Ground(game.sprite.Sprite):
   def __init__(self):
     super(Ground, self).__init__()
@@ -66,16 +33,62 @@ class Ground(game.sprite.Sprite):
   def draw(self):
     surface.blit(self.image, self.rect)
 
-  
+class Player(game.sprite.Sprite):
+  def __init__(self):
+    super(Player, self).__init__()
+    self.image = game.Surface((50,50))
+    self.image.fill(green)
+    
+    self.rect = self.image.get_rect()
+    self.rect.x = 0
+    self.rect.y = 150
+    self.onground = True
+    
+    
+  # Draws the player on the screen and updates it
+  def draw(self):
+    self.rect.y = 0
+    if self.onground == True:
+      self.rect.bottom = ground.rect.top
+    surface.blit(self.image, self.rect)
 
+  # Function for jumping
+  def gravitySwitch(self):
+    if self.onground == False:
+      self.onground = True
+    elif self.onground == True:
+      self.onground = False
+  
+class redbox(game.sprite.Sprite):
+  def __init__(self):
+    super(redbox, self).__init__()
+    self.image = game.Surface((50,50))
+    self.image.fill(red)
+    self.rect = self.image.get_rect()
+    self.rect.x = 400
+    self.rect.y = 0
+    self.lap = 1
+    
+  def draw(self):
+    self.rect.y = 0
+    self.rect.bottom = ground.rect.top
+    surface.blit(self.image, self.rect)
+    self.rect.x -= 1 * self.lap
+    if self.rect.x <= 0:
+      self.rect.x = 400
+      self.lap += 1
 
 #--- sprites and objects ---
 allSprites = game.sprite.Group()
-player = Player()
-allSprites.add(player)
 ground = Ground()
+player = Player()
+redBox = redbox()
+allSprites.add(player)
 allSprites.add(ground)
+allSprites.add(redBox)
 ticktock = game.time.Clock()
+
+
 
 #--- Game Functions ---
 def start():
@@ -86,18 +99,13 @@ def start():
     for event in game.event.get():
       if event.type == game.KEYDOWN:
         if event.key == game.K_UP:
-          player.isJumping = True
+          player.gravitySwitch()
 
       if event.type == game.MOUSEBUTTONDOWN:
         if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
           game.quit()
 
     # Detects which keys are held down
-    keys = game.key.get_pressed()
-    if keys[game.K_LEFT]:
-      player.moveLeft()
-    elif keys[game.K_RIGHT]:
-      player.moveRight()
     
 
 
@@ -110,14 +118,22 @@ def start():
     else:
       game.draw.rect(surface,darkGray,[0,0,30,20])
     
+
+    collide = player.rect.colliderect(redBox.rect)
+
+    if collide:
+      endGame()
+
     surface.blit(quitText,(0,0))
     allSprites.update()
-    player.jumpTick()
     player.draw()
     ground.draw()
+    redBox.draw()
     game.display.update()
     
-  
+def endGame():
+  print("Game Over")
+  game.quit()
 
 #--- start loop ---
 
