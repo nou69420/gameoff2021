@@ -27,6 +27,7 @@ quitFont = game.font.SysFont('Corbel', 15)
 quitText = quitFont.render('quit', True, darkGreen)
 instructions = quitFont.render('Press space to flip gravity, dont get hit by red!', True, green)
 gameOver = startFont.render('Game Over!', True, red)
+mainMenu = quitFont.render('Main Menu', True, darkGreen)
 
 #--- classes ---
 class Ground(game.sprite.Sprite):
@@ -104,7 +105,9 @@ ticktock = game.time.Clock()
 def start():
     print("started")
     frame = 1
-    while True:
+    global keepGoing
+    
+    while keepGoing:
         ticktock.tick(30)
         for event in game.event.get():
             if event.type == game.MOUSEBUTTONDOWN:
@@ -140,51 +143,65 @@ def start():
         game.display.update()
 
 def endGame():
-    while True:
+    global keepGoing
+    while keepGoing:
         mouse = game.mouse.get_pos()
         for event in game.event.get():
 
             if event.type == game.MOUSEBUTTONDOWN:
                 if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
                     game.quit()
+                elif 175 <= mouse[0] <= 225 and 200 <= mouse[1] <= 220:
+                    keepGoing = False
 
         if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
             game.draw.rect(surface,lightGray,[0,0,30,20])
+            game.draw.rect(surface,darkGray,[175,200,50,20])
+        elif 175 <= mouse[0] <= 225 and 200 <= mouse[1] <= 220:
+            game.draw.rect(surface,darkGray,[0,0,30,20])
+            game.draw.rect(surface,lightGray,[175,200,50,20])
         else:
             game.draw.rect(surface,darkGray,[0,0,30,20])
+            game.draw.rect(surface,darkGray,[175,200,50,20])
 
         surface.blit(gameOver, (150,150))
+        surface.blit(mainMenu, (175,205))
         surface.blit(startFont.render("Score: " + str(redBox.lap - 2), True, red),(175,175))
         surface.blit(quitText,(0,0))
         game.display.update()
 
 #--- start loop ---
 
+keepGoing = True
 while True:
-    ticktock.tick(60)
-    mouse = game.mouse.get_pos()
-    for event in game.event.get():
-        if event.type == game.MOUSEBUTTONDOWN:
-            if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
-                start()
-            elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-                game.quit()
+    while keepGoing:
+        ticktock.tick(60)
+        mouse = game.mouse.get_pos()
+        for event in game.event.get():
+            if event.type == game.MOUSEBUTTONDOWN:
+                if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
+                    start()
+                elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+                    game.quit()
 
-    surface.fill((0,0,255))
+        surface.fill((0,0,255))
 
 
-    if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
-        game.draw.rect(surface,lightGray,[115,130,155,40])
-        game.draw.rect(surface,darkGray,[0,0,30,20])
-    elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-        game.draw.rect(surface,lightGray,[0,0,30,20])
-        game.draw.rect(surface,darkGray,[115,130,155,40])
-    else:
-        game.draw.rect(surface,darkGray,[115,130,155,40])
-        game.draw.rect(surface,darkGray,[0,0,30,20])
+        if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
+            game.draw.rect(surface,lightGray,[115,130,155,40])
+            game.draw.rect(surface,darkGray,[0,0,30,20])
+        elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+            game.draw.rect(surface,lightGray,[0,0,30,20])
+            game.draw.rect(surface,darkGray,[115,130,155,40])
+        else:
+            game.draw.rect(surface,darkGray,[115,130,155,40])
+            game.draw.rect(surface,darkGray,[0,0,30,20])
 
-    surface.blit(startText, (120,135))
-    surface.blit(quitText, (0,0))
-    surface.blit(instructions, (100,200))
+        surface.blit(startText, (120,135))
+        surface.blit(quitText, (0,0))
+        surface.blit(instructions, (100,200))
 
-    game.display.update()
+        game.display.update()
+    keepGoing = True
+    player = Player()
+    redBox = Redbox()
