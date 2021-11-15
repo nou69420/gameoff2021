@@ -61,9 +61,9 @@ class Player(game.sprite.Sprite):
         elif self.onground == True:
             self.onground = False
   
-class redbox(game.sprite.Sprite):
+class Redbox(game.sprite.Sprite):
     def __init__(self):
-        super(redbox, self).__init__()
+        super(Redbox, self).__init__()
         self.image = game.Surface((50,50))
         self.image.fill(red)
         self.rect = self.image.get_rect()
@@ -88,7 +88,7 @@ class redbox(game.sprite.Sprite):
 allSprites = game.sprite.Group()
 ground = Ground()
 player = Player()
-redBox = redbox()
+redBox = Redbox()
 allSprites.add(player)
 allSprites.add(ground)
 allSprites.add(redBox)
@@ -149,6 +149,7 @@ def endGame():
             game.draw.rect(surface,darkGray,[0,0,30,20])
 
         surface.blit(gameOver, (150,150))
+        surface.blit(startFont.render("Score: " + str(redBox.lap - 2), True, red),(175,175))
         surface.blit(quitText,(0,0))
         game.display.update()
 
