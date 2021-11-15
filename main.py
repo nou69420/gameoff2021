@@ -1,7 +1,12 @@
+'''
+Made by TheZeldaBoi/Ldude162
+Submission for GitHub gameoff 2021
+'''
+
 #--- Import modules ---
-import pygame as game
-import random as rand
 import math
+import random as rand
+import pygame as game
 
 #--- Start display ---
 game.init()
@@ -26,22 +31,22 @@ gameOver = startFont.render('Game Over!', True, red)
 #--- classes ---
 class Ground(game.sprite.Sprite):
     def __init__(self):
-        super(Ground, self).__init__()
+        super().__init__()
         self.image = game.Surface((400,80))
         self.image.fill(darkGreen)
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 250
-  
+
     def draw(self):
         surface.blit(self.image, self.rect)
 
 class Player(game.sprite.Sprite):
     def __init__(self):
-        super(Player, self).__init__()
+        super().__init__()
         self.image = game.Surface((50,50))
         self.image.fill(green)
-    
+
         self.rect = self.image.get_rect()
         self.rect.x = 0
         self.rect.y = 150
@@ -60,10 +65,10 @@ class Player(game.sprite.Sprite):
             self.onground = True
         elif self.onground == True:
             self.onground = False
-  
+
 class Redbox(game.sprite.Sprite):
     def __init__(self):
-        super(Redbox, self).__init__()
+        super().__init__()
         self.image = game.Surface((50,50))
         self.image.fill(red)
         self.rect = self.image.get_rect()
@@ -71,7 +76,7 @@ class Redbox(game.sprite.Sprite):
         self.rect.y = 0
         self.lap = 2
         self.location = 1
-    
+
     def draw(self):
         self.rect.y = 0
 
@@ -99,7 +104,7 @@ ticktock = game.time.Clock()
 def start():
     print("started")
     frame = 1
-    while(True):
+    while True:
         ticktock.tick(30)
         for event in game.event.get():
             if event.type == game.MOUSEBUTTONDOWN:
@@ -108,18 +113,18 @@ def start():
             elif event.type == game.KEYDOWN:
                 if event.key == game.K_SPACE:
                     player.gravitySwitch()
-    
+
 
 
         mouse = game.mouse.get_pos()
-    
+
         surface.fill(blue)
 
         if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
             game.draw.rect(surface,lightGray,[0,0,30,20])
         else:
             game.draw.rect(surface,darkGray,[0,0,30,20])
-    
+
 
         collide = player.rect.colliderect(redBox.rect)
 
@@ -133,7 +138,7 @@ def start():
         redBox.draw()
         ground.draw()
         game.display.update()
-    
+
 def endGame():
     while True:
         mouse = game.mouse.get_pos()
@@ -164,10 +169,10 @@ while True:
                 start()
             elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
                 game.quit()
-    
+
     surface.fill((0,0,255))
-    
-  
+
+
     if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
         game.draw.rect(surface,lightGray,[115,130,155,40])
         game.draw.rect(surface,darkGray,[0,0,30,20])
@@ -177,9 +182,9 @@ while True:
     else:
         game.draw.rect(surface,darkGray,[115,130,155,40])
         game.draw.rect(surface,darkGray,[0,0,30,20])
-    
+
     surface.blit(startText, (120,135))
     surface.blit(quitText, (0,0))
     surface.blit(instructions, (100,200))
-  
+
     game.display.update()
