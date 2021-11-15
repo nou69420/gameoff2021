@@ -97,53 +97,51 @@ ticktock = game.time.Clock()
 
 #--- Game Functions ---
 def start():
-  print("started")
-  frame = 1
-  while(True):
-      ticktock.tick(30)
-      for event in game.event.get():
-          if event.type == game.MOUSEBUTTONDOWN:
-              if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-                  game.quit()
-
-    # Detects which keys are held down
+    print("started")
+    frame = 1
+    while(True):
+        ticktock.tick(30)
+        for event in game.event.get():
+            if event.type == game.MOUSEBUTTONDOWN:
+                if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+                    game.quit()
+            elif event.type == game.KEYDOWN:
+                if event.key == game.K_SPACE:
+                    player.gravitySwitch()
     
 
 
-      mouse = game.mouse.get_pos()
+        mouse = game.mouse.get_pos()
     
-      surface.fill(blue)
+        surface.fill(blue)
 
-      if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-          game.draw.rect(surface,lightGray,[0,0,30,20])
-      else:
-          game.draw.rect(surface,darkGray,[0,0,30,20])
+        if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+            game.draw.rect(surface,lightGray,[0,0,30,20])
+        else:
+            game.draw.rect(surface,darkGray,[0,0,30,20])
     
 
-      collide = player.rect.colliderect(redBox.rect)
+        collide = player.rect.colliderect(redBox.rect)
 
-      if collide:
-          endGame()
+        if collide:
+            endGame()
 
-      surface.blit(quitText,(0,0))
-      allSprites.update()
-      player.draw()
-      frame += 1
-      redBox.draw()
-      ground.draw()
-      game.display.update()
+        surface.blit(quitText,(0,0))
+        allSprites.update()
+        player.draw()
+        frame += 1
+        redBox.draw()
+        ground.draw()
+        game.display.update()
     
 def endGame():
     while True:
         mouse = game.mouse.get_pos()
         for event in game.event.get():
-            if event.type == game.KEYDOWN:
-                if event.key == game.K_SPACE:
-                    player.gravitySwitch()
 
-                if event.type == game.MOUSEBUTTONDOWN:
-                    if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-                        game.quit()
+            if event.type == game.MOUSEBUTTONDOWN:
+                if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+                    game.quit()
 
         if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
             game.draw.rect(surface,lightGray,[0,0,30,20])
@@ -158,15 +156,15 @@ def endGame():
 
 while True:
     ticktock.tick(60)
+    mouse = game.mouse.get_pos()
     for event in game.event.get():
         if event.type == game.MOUSEBUTTONDOWN:
-          if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
-            start()
-        elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
-            game.quit()
+            if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
+                start()
+            elif 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
+                game.quit()
     
     surface.fill((0,0,255))
-    mouse = game.mouse.get_pos()
     
   
     if 115 <= mouse[0] <= 255 and 130 <= mouse[1] <= 170:
