@@ -51,7 +51,7 @@ class Player(game.sprite.Sprite):
         self.rect.x = 0
         self.rect.y = 150
         self.onground = True
-    
+
   # Draws the player on the screen and updates it
     def draw(self):
         self.rect.y = 0
