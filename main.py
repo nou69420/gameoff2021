@@ -151,18 +151,18 @@ def endGame():
             if event.type == game.MOUSEBUTTONDOWN:
                 if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
                     game.quit()
-                elif 175 <= mouse[0] <= 225 and 200 <= mouse[1] <= 220:
+                elif 175 <= mouse[0] <= 255 and 200 <= mouse[1] <= 220:
                     keepGoing = False
 
         if 0 <= mouse[0] <= 30 and 0 <= mouse[1] <= 20:
             game.draw.rect(surface,lightGray,[0,0,30,20])
-            game.draw.rect(surface,darkGray,[175,200,50,20])
-        elif 175 <= mouse[0] <= 225 and 200 <= mouse[1] <= 220:
+            game.draw.rect(surface,darkGray,[175,200,80,20])
+        elif 175 <= mouse[0] <= 255 and 200 <= mouse[1] <= 220:
             game.draw.rect(surface,darkGray,[0,0,30,20])
-            game.draw.rect(surface,lightGray,[175,200,50,20])
+            game.draw.rect(surface,lightGray,[175,200,80,20])
         else:
             game.draw.rect(surface,darkGray,[0,0,30,20])
-            game.draw.rect(surface,darkGray,[175,200,50,20])
+            game.draw.rect(surface,darkGray,[175,200,80,20])
 
         surface.blit(gameOver, (150,150))
         surface.blit(mainMenu, (175,205))
